@@ -12,14 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Debug folder
+        run: |
+          echo "Repo root:"
+          ls -la
+          echo "APP_DIR contents:"
+          ls -la "${{ env.APP_DIR }}" || true
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r "${{ env.APP_DIR }}/requirements.txt"
+
   build_and_push:
     needs: lint-test
     runs-on: ubuntu-latest
