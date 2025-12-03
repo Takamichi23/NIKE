@@ -24,9 +24,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r ecom/fastapi_app/requirements.txt
+        run: python -m pip install -r fastapi_app/requirements.txt
+        working-directory: ./ecom  # if not already inside fastapi_app
+
 
 
       - name: Run pre-commit hooks
