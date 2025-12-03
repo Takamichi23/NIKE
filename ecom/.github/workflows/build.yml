@@ -8,6 +8,9 @@ on:
 jobs:
   lint-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fastapi_app  # <-- set working directory here
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -25,7 +28,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # If your requirements file is in a subfolder, change the path below:
           pip install -r requirements.txt
 
       - name: Run pre-commit hooks
@@ -37,6 +39,9 @@ jobs:
   build_and_push:
     needs: lint-test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fastapi_app  # <-- make sure Dockerfile context is correct
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -53,7 +58,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile              
+          context: .   # inside fastapi_app
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:latest
