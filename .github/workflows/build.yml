@@ -1,0 +1,69 @@
+name: Build and push Docker image
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  # Folder containing your Dockerfile and requirements.txt
+  APP_DIR: "ecom/fastapi_app"
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Show repository structure (debug)
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+          echo "Listing APP_DIR: ${{ env.APP_DIR }}"
+          ls -la "${{ env.APP_DIR }}" || true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install tooling and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install project dependencies from the correct app folder
+          python -m pip install -r "${{ env.APP_DIR }}/requirements.txt"
+
+      - name: Install dev tools
+        run: python -m pip install pre-commit pyright
+
+      - name: Run pre-commit hooks
+        run: pre-commit run --all-files
+
+      - name: Run pyright
+        run: pyright "${{ env.APP_DIR }}"
+
+  build_and_push:
+    needs: lint-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          # Build context should be the folder containing Dockerfile + requirements.txt
+          context: ${{ env.APP_DIR }}
+          file: ${{ env.APP_DIR }}/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:latest
