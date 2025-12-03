@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from database import SessionLocal
-import models
+from fastapi_app.database import SessionLocal
+from fastapi_app import models
+
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
@@ -21,6 +22,14 @@ def get_db():
 
 @app.get("/health")
 def health(): return {"status": "ok"}
+
+# ============================================================
+# Root Endpoint
+# ============================================================
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello World"}
 
 # ============================================================
 # GET API: All items / Item by ID

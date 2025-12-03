@@ -10,7 +10,7 @@ RUN pip wheel --wheel-dir=/wheels -r requirements.txt
 COPY . .
 
 # Stage 2: runtime image
-FROM python:3.12-slim
+FROM python:3.13.10-slim
 WORKDIR /app
 
 RUN useradd -m appuser
