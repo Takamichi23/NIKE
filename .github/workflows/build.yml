@@ -5,7 +5,7 @@ on:
       - main
 
 env:
-  APP_DIR: "ecom/ecom/fastapi_app"
+  APP_DIR: "fastapi_app"
 
 jobs:
   lint-test:
