@@ -8,9 +8,7 @@ on:
 jobs:
   lint-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: fastapi_app  # <-- set working directory here
+  
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
