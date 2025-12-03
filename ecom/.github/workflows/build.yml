@@ -5,10 +5,14 @@ on:
     branches:
       - main
 
+env:
+  # Set this to the folder that contains your Dockerfile and requirements.txt.
+  # Examples: "fastapi_app", "fastapi_api", "ecom/fastapi_api", "ecom/fastapi_app"
+  APP_DIR: "ecom/fastapi_api"
+
 jobs:
   lint-test:
     runs-on: ubuntu-latest
-  
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -17,28 +21,32 @@ jobs:
         run: |
           echo "PWD: $(pwd)"
           ls -la
+          echo "Listing APP_DIR: ${{ env.APP_DIR }}"
+          ls -la "${{ env.APP_DIR }}" || true
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: python -m pip install -r ecom/ecom/fastapi_app/requirements.txt
+      - name: Install tooling and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # install project deps from the app folder
+          python -m pip install -r "${{ env.APP_DIR }}/requirements.txt"
 
+      - name: Install dev tools
+        run: python -m pip install pre-commit pyright
 
       - name: Run pre-commit hooks
         run: pre-commit run --all-files
 
       - name: Run pyright
-        run: pyright
+        run: pyright "${{ env.APP_DIR }}"
 
   build_and_push:
     needs: lint-test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: fastapi_app  # <-- make sure Dockerfile context is correct
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -52,11 +60,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push  
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .   # inside fastapi_app
-          file: ./Dockerfile
+          # build context should be the folder containing Dockerfile + requirements.txt
+          context: ${{ env.APP_DIR }}
+          file: ${{ env.APP_DIR }}/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ecommerce_hernandez:latest
-
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:latest
