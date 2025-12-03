@@ -1,13 +1,25 @@
-FROM python:3.12-slim
-
+# Stage 1: build environment
+FROM python:3.12-slim as builder
 WORKDIR /app
+# Install build deps if any (wheel, setuptools)
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip wheel --wheel-dir=/wheels -r requirements.txt
 
-# Copy only the FastAPI folder into the container
-COPY . /app
+# Copy application source
+COPY . .
 
-# Install dependencies from the requirements inside fastapi folder
-RUN pip install --no-cache-dir -r requirements.txt
-
+# Stage 2: runtime image
+FROM python:3.12-slim
+WORKDIR /app
+# create non-root user
+RUN useradd -m appuser
+COPY --from=builder /wheels /wheels
+RUN pip install --no-index --find-links=/wheels -r requirements.txt
+COPY --from=builder /app /app
+USER appuser
+ENV PYTHONUNBUFFERED=1
+# Expose your API port (adjust)
 EXPOSE 8000
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Example entrypoint (adjust to how you run your app)
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
