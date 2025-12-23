@@ -8298,6 +8298,7 @@ textarea.form-control-lg {
   visibility: hidden !important;
 }
 
+<<<<<<< HEAD
 .register-hero {
     background: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
                 url('/static/images/register-hero.jpg') center/cover no-repeat;
@@ -8410,6 +8411,8 @@ form input {
     cursor: pointer;
 }
 
+=======
+>>>>>>> b141838556e44d40de503a9f359bae6138c3d60c
 @media (min-width: 576px) {
   .float-sm-start {
     float: left !important;

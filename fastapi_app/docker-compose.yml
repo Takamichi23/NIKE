@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3.9"
 
 services:
@@ -13,6 +14,19 @@ services:
       - DATABASE_URL=${DATABASE_URL}
     volumes:
       - .:/app  # mount your code inside the container
+=======
+version: "3.8"
+services:
+  api:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}
+    restart: always
+    ports:
+      - "80:8000"
+    environment:
+      - ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on: []
+>>>>>>> b141838556e44d40de503a9f359bae6138c3d60c
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s

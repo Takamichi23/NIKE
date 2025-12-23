@@ -5,7 +5,11 @@ on:
       - main
 
 env:
+<<<<<<< HEAD
   APP_DIR: "ecom/ecom/fastapi_app"
+=======
+  APP_DIR: "fastapi_app"
+>>>>>>> b141838556e44d40de503a9f359bae6138c3d60c
 
 jobs:
   lint-test:
