@@ -8411,8 +8411,6 @@ form input {
     cursor: pointer;
 }
 
-=======
->>>>>>> b141838556e44d40de503a9f359bae6138c3d60c
 @media (min-width: 576px) {
   .float-sm-start {
     float: left !important;

@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from fastapi_app.database import SessionLocal
-from fastapi_app import models
-
+from .database import SessionLocal
+from . import models
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
@@ -20,13 +19,13 @@ def get_db():
     finally:
         db.close()
 
+        
 @app.get("/health")
 def health(): return {"status": "ok"}
 
 # ============================================================
-# Root Endpoint
+# root
 # ============================================================
-
 @app.get("/")
 def read_root():
     return {"message": "Hello World"}

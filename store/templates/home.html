@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-<<<<<<< HEAD
+
 {% load static %} <!-- ADD THIS LINE -->
 {% block content %}
 
 
 <!-- HERO SECTION -->
-<header class="shop-hero text-center text-white" 
-        style="background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('{% static 'images/hero1.jpg' %}') center/cover no-repeat; height: 100vh; display: flex; align-items: center; justify-content: center;">
+<header class="shop-hero text-center text-white"
+    style="background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('{% static 'images/hero1.jpg' %}') center/cover no-repeat; height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div class="container">
         <h1 class="fw-bold">Discover the Latest in Fashion</h1>
         <p class="lead">Trendy styles, unbeatable prices. Shop now and elevate your wardrobe!</p>
@@ -63,42 +63,48 @@
     <div class="container">
         <h2 class="fw-bold mb-4 text-center">Trending Products</h2>
         <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-
             {% for product in products %}
             <div class="col">
-                <div class="product-card h-100 position-relative">
-
+                <div class="product-card h-100 d-flex flex-column position-relative border rounded overflow-hidden">
+                    
+                    <!-- Sale badge -->
                     {% if product.is_sale %}
-                    <span class="badge bg-dark position-absolute top-0 end-0 m-2">Sale</span>
+                    <span class="badge bg-dark position-absolute top-0 start-0 m-2">Sale</span>
                     {% endif %}
+                    
+                    <!-- Wishlist heart -->
+                    <i class="bi bi-heart position-absolute top-0 end-0 m-2 text-danger" style="cursor:pointer;"></i>
 
+                    <!-- Product image -->
                     <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
-
-                    <div class="product-info text-center p-2">
+                    
+                    <!-- Product info -->
+                    <div class="product-info text-center p-2 flex-grow-1 d-flex flex-column justify-content-between">
                         <h5 class="fw-semibold mb-1">{{ product.name }}</h5>
-
-                        {% if product.is_sale %}
-                        <small>
-                            <strike>${{ product.price }}</strike>
-                            <strong>${{ product.sale_price }}</strong>
-                        </small>
-                        {% else %}
-                        <small>${{ product.price }}</small>
-                        {% endif %}
+                        <div>
+                            {% if product.is_sale %}
+                            <small>
+                                <strike>${{ product.price }}</strike>
+                                <strong>${{ product.sale_price }}</strong>
+                            </small>
+                            {% else %}
+                            <small>${{ product.price }}</small>
+                            {% endif %}
+                        </div>
                     </div>
 
-                    <div class="product-actions d-flex justify-content-center gap-2">
-                        <i class="bi bi-heart"></i>
-                        <a href="{% url 'product' product.id %}" class="btn btn-outline-dark btn-sm">View</a>
+                    <!-- View button at bottom -->
+                    <div class="text-center p-2">
+                        <a href="{% url 'product' pk=product.id %}" class="btn btn-outline-dark btn-sm w-100">View</a>
                     </div>
 
                 </div>
             </div>
             {% endfor %}
-
         </div>
     </div>
 </section>
+
 
 <!-- PROMO BANNER -->
 <section class="py-5 text-center text-white" style="background: url('{% static " images/promo-banner.jpg" %}')
@@ -111,83 +117,3 @@
 </section>
 
 {% endblock %}
-=======
-
-{% block content %}
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop in style</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
-                </div>
-            </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    
-                    
-                    {% for product in products %}
-                        {% if product.is_sale %}
-                         <div class="col mb-5">
-                            <div class="card h-100">
-                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
-                                    Sale
-                                </div>
-                                <!-- Product image-->
-                                <img class="card-img-top" src="{{ product.image.url }}" alt="..." />
-                                <!-- Product details-->
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        <!-- Product name-->
-                                        <h5 class="fw-bolder">{{ product.name }}</h5>
-                                        <div class="d-flex justify-content-center small text-warning mb-2">
-                                            <div class="bi-star-fill"></div>
-                                                &nbsp;&nbsp;Sale!&nbsp;&nbsp;
-                                            <div class="bi-star-fill"></div>
-                                        </div>
-                                        <!-- Product price-->
-                                        <strike>
-                                        ${{product.price }}
-                                        </strike>
-                                        &nbsp;
-                                        ${{product.sale_price }}
-                                    </div>
-                                </div>
-                                <!-- Product actions-->
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View Product</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="{{ product.image.url }}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ product.name }}</h5>
-                                    <!-- Product price-->
-                                    ${{ product.price }}
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View Product</a></div>
-                            </div>
-                        </div>
-                    </div>
-                        {% endif %}
-                    {% endfor %}
-
-                </div>
-            </div>
-        </section>
-        
-{% endblock %}        
->>>>>>> b141838556e44d40de503a9f359bae6138c3d60c
