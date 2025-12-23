@@ -52,3 +52,19 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Django
+db.sqlite3
+
+# Virtual env
+venv/
+virt/
+.env
+
+# OS
+.DS_Store
